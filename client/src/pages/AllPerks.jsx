@@ -23,14 +23,24 @@ export default function AllPerks() {
 
   // ==================== SIDE EFFECTS WITH useEffect HOOK ====================
 
- /*
- TODO: HOOKS TO IMPLEMENT
- * useEffect Hook #1: Initial Data Loading
- * useEffect Hook #2: Auto-search on Input Change
+ 
+//TODO: HOOKS TO IMPLEMENT
+//useEffect Hook #1: Initial Data Loading
+useEffect(() => {
+  // Load all perks when component mounts
+  loadAllPerks()
+}, []) // Empty dependency array means run once on mount
 
-*/
+ //useEffect Hook #2: Auto-search on Input Change
+  useEffect(() => {
+    // Only auto-search if at least one filter has changed (after initial load)
+    const timer = setTimeout(() => {
+      loadAllPerks()
+    }, 500) // 500ms debounce to avoid too many API calls
 
-  
+    return () => clearTimeout(timer) // Cleanup timer on dependency change
+  }, [searchQuery, merchantFilter])
+
   useEffect(() => {
     // Extract all merchant names from perks array
     const merchants = perks
@@ -137,6 +147,8 @@ export default function AllPerks() {
                 className="input"
                 placeholder="Enter perk name..."
                 
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
               />
               <p className="text-xs text-zinc-500 mt-1">
                 Auto-searches as you type, or press Enter / click Search
@@ -152,6 +164,8 @@ export default function AllPerks() {
               <select
                 className="input"
                 
+                value={merchantFilter}
+                onChange={e => setMerchantFilter(e.target.value)}
               >
                 <option value="">All Merchants</option>
                 
@@ -214,10 +228,9 @@ export default function AllPerks() {
           - If perks.length === 0: Show empty state (after the map)
         */}
         {perks.map(perk => (
-          
           <Link
             key={perk._id}
-           
+            to={`/perks/${perk._id}`}
             className="card hover:shadow-lg transition-shadow cursor-pointer"
           >
             {/* Perk Title */}

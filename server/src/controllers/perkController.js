@@ -72,7 +72,7 @@ export async function getAllPerksPublic(req, res, next) {
     // Fetch perks with the built query, populate creator info, and sort by newest first
     const perks = await Perk
       .find(query)
-      .populate('createdBy', 'name email') // Include creator information
+      // .populate('createdBy', 'name email') // Include creator information
       .sort({ createdAt: -1 })
       .lean();
 
